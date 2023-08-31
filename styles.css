@@ -1,0 +1,21 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+#productSelect, #variationOptions select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#ProductCode {
+  font-weight: bold;
+}
