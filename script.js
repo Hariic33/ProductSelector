@@ -1,10 +1,11 @@
+import data from './data.json' assert { type: 'json' };
+
+const findItemByCode = (code) => data.items.find((item) => item.code === code);
+
 document.addEventListener("DOMContentLoaded", async () => {
     const productSelect = document.getElementById("productSelect");
     const variationOptions = document.getElementById("variationOptions");
     const productCode = document.getElementById("ProductCode");
-
-    const response = await fetch("data.json");
-    const data = await response.json();
 
     const populateProductSelect = () => {
         data.items.forEach(({ code, description }) =>
@@ -14,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const updateVariationOptions = (productCode) => {
         variationOptions.innerHTML = "";
-        const product = data.items.find((item) => item.code === productCode);
+        const product = findItemByCode(productCode);
         if (!product) return;
 
         product.varieties.forEach((varietyCode) => {
@@ -44,21 +45,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     const updateProductCode = () => {
-        const selectedVariationSelects = variationOptions.querySelectorAll("select");
-        const selectedVariations = Array.from(selectedVariationSelects).map(
+const selectedVariationSelects = variationOptions.querySelectorAll("select");
+        const parts = Array.from(selectedVariationSelects).map(
             (select) => select.value
         );
-
-        const selectedProduct = data.items.find(
-            (item) => item.code === productSelect.value
-        );
-
-        const variationSeparator = selectedVariations.length > 0 ? "." : "";
-        const compositeCode = `${selectedProduct?.code || ""}${variationSeparator}${selectedVariations.join(
-            "."
-        )}`;
-        productCode.textContent = `Product Code: ${compositeCode}`;
-    };
+        parts.unshift(findItemByCode(productSelect.value)?.code || "")
+        if (parts.find(p => p === "") != null) {
+            productCode.textContent = `Please select all options`;
+        } else {
+            productCode.textContent = `Product Code: ${parts.join(".")}`;
+        }}
 
     populateProductSelect();
     productSelect.addEventListener("change", handleProductChange);
